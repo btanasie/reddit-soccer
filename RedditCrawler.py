@@ -15,9 +15,9 @@ def GetPosts(soccer_subreddit):
         #comments.append(comment.body.replace('\n', ' ').replace('\r', ' '))
         # print(comment.created)
         # print(comment.author)
-        posts.append([post.title, post.score, post.id, post.url, post.selftext, post.created, comment.body.replace('\n', ' ').replace('\r', ' '), comment.author, comment.created, comment.upvote, comment.downvote])
+        posts.append([post.title, post.score, post.id, post.selftext, post.created, comment.body.replace('\n', ' ').replace('\r', ' '), comment.author, comment.created])
 
-  return pd.DataFrame(posts, columns=['ptitle', 'pscore', 'pid', 'purl', 'pbody', 'pcreated', 'comment', 'cauthor', 'ccreated', 'cupvote', 'cdownvote'])
+  return pd.DataFrame(posts, columns=['ptitle', 'pscore', 'pid', 'pbody', 'pcreated', 'comment', 'cauthor', 'ccreated'])
 
 pre_soccer_subreddit = reddit.subreddit('soccer').search('flair:Pre Match Thread')
 pre_posts = GetPosts(pre_soccer_subreddit)
