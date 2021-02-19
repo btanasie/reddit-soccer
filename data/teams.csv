@@ -1,36 +1,42 @@
 Team Name,Other Name
-FC Bayern Munchen,Bayern
-FC Barcelona,Barca
+Bayern,FC Bayern Munchen
+Barcelona,FC Barcelona
+Barcelona,Barca
 Juventus,Juve
-Real Madrid CF,Real
-Club Atletico de Madrid,Atleti
-Club Atletico de Madrid,Atletico
-Manchester City FC,City
-Manchester City FC,Manchester City
-Paris Saint-Germain,PSG
-Liverpool FC,Liverpool
-Sevilla FC,Sevilla
-Manchester United FC,Manu
-Manchester United FC,United
-Manchester United FC,Manchester United
-Arsenal FC,Arsenal
-Arsenal FC,Gunners
-Borussia Dortmund,Dortmund
-Chelsea FC,Chelsea
-FC Porto,Porto
-Tottenham Hotspur,Tottenham
-Tottenham Hotspur,Spurs
-Olympique Lyonnais,Lyon
-Olympique Lyonnais,OL
-FC Shakhtar,Shakthar
-AS Roma,Roma
-AFC Ajax,Ajax
-SSC Napoli,Napoli
-RB Leipzig,Leipzig
-FC Salzburg,Salzburg
-Bayer 04 Leverkeusen,Leverkeusen
-SL Benfica,Benfica
-FC Internazionale Milano,Inter
-FC Internazionale Milano,Internazionale
-AC Milan,Milan
-Villarreal CF,Villarreal
+RealMadrid,Real Madrid CF
+RealMadrid,Real
+AtleticoMadrid,Club Atletico de Madrid
+AtleticoMadrid,Atleti
+AtleticoMadrid,Atletico Madrid
+ManCity,City
+ManCity,Manchester City FC
+ManCity,Manchester City
+PSG,Paris Saint-Germain
+PSG,Paris Saint-Germain
+LiverpooL,Liverpool FC
+Sevilla,Sevilla FC
+ManUnited,Manu
+ManUnited,United
+ManUnited,Manchester United FC
+ManUnited,Manchester United
+Arsenal,Arsenal FC
+Arsenal,Gunners
+Dortmund,Borussia Dortmund
+Chelsea,Chelsea FC
+Porto,FC Porto
+Tottenham,Tottenham Hotspur
+Tottenham,Spurs
+Lyon,Olympique Lyonnais
+Lyon,OL
+Shakhtar,FC Shakthar
+Roma,AS Roma
+Ajax,AFC Ajax
+Napoli,SSC Napoli
+Leipzig,RB Leipzig
+Salzburg,FC Salzburg
+Leverkeusen,Bayer 04 Leverkeusen
+Benfica,SL Benfica
+Inter,FC Internazionale Milano
+Inter,Internazionale
+Milan,AC Milan
+Villarreal,Villarreal CF
