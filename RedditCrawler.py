@@ -10,7 +10,7 @@ def GetPosts(soccer_subreddit):
       # Get comments
       comments = []
       submission = reddit.submission(id=post.id)
-      submission.comments.replace_more(limit=0)
+      submission.comments.replace_more(limit=None)
       for comment in submission.comments.list():
         #comments.append(comment.body.replace('\n', ' ').replace('\r', ' '))
         # print(comment.created)
