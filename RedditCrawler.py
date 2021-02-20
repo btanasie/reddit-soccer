@@ -12,13 +12,14 @@ def GetPosts(soccer_subreddit, timeline, limit, columns):
         print(index)
         # Get comments
         submission = reddit.submission(id=post.id)
-        submission.comments.replace_more(limit=limit)
+
 
         if timeline == 'pre':
+            submission.comments.replace_more(limit=limit)
             for comment in submission.comments.list():
                 posts.append([post.title, post.score, post.id, post.selftext, post.created, comment.body.replace('\n', ' ').replace('\r', ' '), comment.author, comment.created])
         else:
-            posts.append([post.title, post.score, post.id, post.selftext])
+            posts.append([post.title, post.score, post.id, post.selftext,post.created])
 
         index += 1
     print('\n')
@@ -32,7 +33,7 @@ pre_soccer_subreddit = reddit.subreddit('soccer').search('flair:Pre Match Thread
 pre_posts = GetPosts(pre_soccer_subreddit, timeline='pre', limit=None, columns=['ptitle', 'pscore', 'pid', 'pbody', 'pcreated', 'comment', 'cauthor', 'ccreated'])
 
 post_soccer_subreddit = reddit.subreddit('soccer').search('flair:Post Match Thread')
-post_posts = GetPosts(post_soccer_subreddit, timeline='post', limit=25, columns=['ptitle', 'pscore', 'pid', 'pbody'])
+post_posts = GetPosts(post_soccer_subreddit, timeline='post', limit=25, columns=['ptitle', 'pscore', 'pid', 'pbody','pcreated'])
 
 pre_posts.to_csv("./data/pre_soccer_extraction.csv", index=False)
 post_posts.to_csv("./data/post_soccer_extraction.csv", index=False)
