@@ -41,6 +41,7 @@ lift,attributes=loaded_data['team_lift'],loaded_data['attribute_lift']
 data_load_state.text("Done! (using st.cache)")
 
 st.subheader('Raw data')
+# st.write(loaded_data['data']['involved_teams'])
 st.write(lift)
 st.write(attributes)
 
@@ -50,7 +51,10 @@ option = st.selectbox(
     'Which match?',
     matches)
 print(option)
+print(type(option))
 
+teams = option.replace('[', '').replace(']', '').split(',')
+involved_teams = [teams[0], teams[1].split()[0]]
 
 match_attributes=match_lift(loaded_data['data'].copy(),option,loaded_data['top_10_team'],toassess)
 st.write(match_attributes)
