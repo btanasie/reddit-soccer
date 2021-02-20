@@ -22,7 +22,9 @@ else:
 
 @st.cache(persist=True, allow_output_mutation=True)
 def load_data(attributes=['good','bad']):
-    predictions = pd.read_csv('./data/garbage_predictions.csv')
+    #predictions = pd.read_csv('./data/garbage_predictions.csv')
+    import pickle
+    predictions = pickle.load( open( "./data/predicted.p", "rb" ) )
     # predictions['involved_teams_str'] = predictions['involved_teams'].apply('_'.join)
     #predictions['matchid'] = predictions['involved_teams'].astype(str)+" "+predictions['pcreated_date'].astype(str)
     return (load_lifts(attributes), predictions)
@@ -67,7 +69,8 @@ st.write(match_attributes)
 st.text('Matchup Sentiment')
 st.text('INSERT HERE')
 
-st.text('Our winner prediction: {}'.format('INSERT HERE'))
+prediction=predictions[predictions['matchid']==option]['winner_predict'].reset_index(drop=True)[0]
+st.text('Our winner prediction: {}'.format(prediction))
 
 
 st.subheader('Wordcloud based on involved teams')
