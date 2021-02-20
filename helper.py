@@ -236,7 +236,7 @@ def match_lift(df_tk_pre,match,top10_team_names,top10_attributes):
 def group_by_involved_teams(df):
     all_words = {}
     all_words_str = {}
-    df['involved_teams_str'] = df['involved_teams'].apply(','.join)
+    df['involved_teams_str'] = df['involved_teams'].apply('_'.join)
     for teams, comment in df.groupby('involved_teams_str')['comment']:
         all_words[teams] = comment
         all_words_str[teams] = ','.join(list(map(','.join, comment)))
