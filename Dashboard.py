@@ -24,9 +24,19 @@ else:
 def load_data(attributes=['good','bad']):
 
       return(load_lifts(attributes))
+import re
+
+
+input_attributes= st.text_input("Please enter attributes (ie. good,bad)")
+if(len(input_attributes)==0):
+    toassess=['good','bad']
+else:
+    toassess=input_attributes.split(",")
+
+    
 
 data_load_state = st.text('Loading data...')
-loaded_data= load_data()
+loaded_data= load_data(toassess)
 lift,attributes=loaded_data['team_lift'],loaded_data['attribute_lift']
 data_load_state.text("Done! (using st.cache)")
 
@@ -41,7 +51,10 @@ option = st.selectbox(
     matches)
 print(option)
 
-match_attributes=match_lift(loaded_data['data'].copy(),option,loaded_data['top_10_team'],['good','bad'])
+
+
+fixed_numbers = st.multiselect("Please select numbers", [1, 2, 3, 4, 5])
+match_attributes=match_lift(loaded_data['data'].copy(),option,loaded_data['top_10_team'],toassess)
 st.write(match_attributes)
 
 HtmlFile = open("./html/lda_n10.html", 'r', encoding='utf-8')
