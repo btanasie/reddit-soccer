@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 import matplotlib.pyplot as plt
 
 admin = False
@@ -19,10 +20,10 @@ else:
     admin = False
     # st.sidebar.text(admin)
 
-
-
 @st.cache(persist=True)
 def load_data():
     return None
 
-
+HtmlFile = open("./html/lda_n10.html", 'r', encoding='utf-8')
+source_code = HtmlFile.read()
+components.html(source_code, width=1200, height=800)
