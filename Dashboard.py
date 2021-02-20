@@ -52,11 +52,18 @@ option = st.selectbox(
 print(option)
 
 
-
-fixed_numbers = st.multiselect("Please select numbers", [1, 2, 3, 4, 5])
 match_attributes=match_lift(loaded_data['data'].copy(),option,loaded_data['top_10_team'],toassess)
 st.write(match_attributes)
 
-HtmlFile = open("./html/lda_n10.html", 'r', encoding='utf-8')
-source_code = HtmlFile.read()
-components.html(source_code, width=1200, height=800)
+
+option = st.selectbox('Which pre-processing?',
+    ('tfidf','bag of words'))
+
+if(option=="bag of words"):
+    HtmlFile = open("./html/lda_n10.html", 'r', encoding='utf-8')
+    source_code = HtmlFile.read()
+    components.html(source_code, width=1200, height=800)
+else:
+    HtmlFile = open("./html/ldatf-idf_n10.html", 'r', encoding='utf-8')
+    source_code = HtmlFile.read()
+    components.html(source_code, width=1200, height=800)
