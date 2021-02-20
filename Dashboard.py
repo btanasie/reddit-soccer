@@ -66,7 +66,12 @@ involved_teams = [teams[0], teams[1].split()[0]]
 team_value_str = all_words_str[str(involved_teams[0] + '_' + involved_teams[1]).replace("'", "")]
 st.image(get_word_cloud(team_value_str))
 
-st.header('Topic Modeling')
+st.header('Topic Modeling Per Matchup')
+HtmlFile = open("./html/lda_n5" + str(involved_teams[0] + '_' + involved_teams[1]).replace("'", "") + ".html", 'r', encoding='utf-8')
+source_code = HtmlFile.read()
+components.html(source_code, width=1200, height=800)
+
+st.header('Topic Modeling All Teams')
 option = st.selectbox('Which pre-processing?',
     ('tfidf','bag of words'))
 
@@ -78,7 +83,3 @@ else:
     HtmlFile = open("./html/ldatf-idf_n10.html", 'r', encoding='utf-8')
     source_code = HtmlFile.read()
     components.html(source_code, width=1200, height=800)
-
-# team_value = all_words[str(involved_teams[0] + ',' + involved_teams[1]).replace("'", "")]
-# HTMLFileTeamsLDA = get_matchup_lda(team_value, 3)
-# components.html(HTMLFileTeamsLDA, width=1200, height=800)
