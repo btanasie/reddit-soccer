@@ -22,7 +22,10 @@ else:
 
 @st.cache(persist=True, allow_output_mutation=True)
 def load_data(attributes=['good','bad']):
-      return(load_lifts(attributes))
+    predictions = pd.read_csv('./data/garbage_predictions.csv')
+    # predictions['involved_teams_str'] = predictions['involved_teams'].apply('_'.join)
+    #predictions['matchid'] = predictions['involved_teams'].astype(str)+" "+predictions['pcreated_date'].astype(str)
+    return (load_lifts(attributes), predictions)
 
 
 def load_groupby(loaded_data):
@@ -41,7 +44,7 @@ else:
     
 
 data_load_state = st.text('Loading data...')
-loaded_data = load_data(toassess)
+loaded_data, predictions = load_data(toassess)
 all_words, all_words_str = load_groupby(loaded_data)
 lift,attributes=loaded_data['team_lift'],loaded_data['attribute_lift']
 data_load_state.text("Done! (using st.cache)")
@@ -57,8 +60,15 @@ option = st.selectbox(
     'Which match?',
     matches)
 
-match_attributes=match_lift(loaded_data['data'].copy(), option, loaded_data['top_10_team'],toassess)
+st.text('Matchup Lift')
+match_attributes = match_lift(loaded_data['data'].copy(), option, loaded_data['top_10_team'],toassess)
 st.write(match_attributes)
+         
+st.text('Matchup Sentiment')
+st.text('INSERT HERE')
+
+st.text('Our winner prediction: {}'.format('INSERT HERE'))
+
 
 st.subheader('Wordcloud based on involved teams')
 teams = option.replace('[', '').replace(']', '').split(',')
