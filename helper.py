@@ -135,6 +135,10 @@ def load_lifts(attributes=['good','bad']):
     df_tk_pre = pickle.load( open( "./data/pre_df_tk.p", "rb" ) )
     df_tk_pre['ptitle'] = [text.lower() for text in df_tk_pre['ptitle']]
     df_tk_pre['involved_teams'] = [x.split(" vs ") for x in df_tk_pre['involved_teams']]
+    match_plus_dates=df_tk_pre['involved_teams'].astype(str)+" "+df_tk_pre['pcreated_date'].astype(str)
+    df_tk_pre['matchid'] = match_plus_dates
+    
+    
     keywords = pd.read_csv('./data/teams.csv')
     teams = list(map(str.lower, list(set(keywords.iloc[:, 0]))))
     
@@ -193,5 +197,27 @@ def load_lifts(attributes=['good','bad']):
     for brand in top10_team_names:
         for attribute in top10_attributes:
            attribute_lift[brand][attribute] = liftcal_fromcounts(team_atrib_associations,df_tk_pre,brand, attribute)
+    
 
-    return({'team_lift':top_brand_lifts,'team_counts':teams_association,'attribute_lift':attribute_lift,'team_atrib_counts':team_atrib_associations})
+    return({'team_lift':top_brand_lifts,'team_counts':teams_association,'attribute_lift':attribute_lift,'team_atrib_counts':team_atrib_associations,'data':df_tk_pre,'top_10_team':top10_team_names,'top_10_attrib':top10_attributes})
+
+def match_lift(df_tk_pre,match,top10_team_names,top10_attributes):
+    #matches=list(set(df_tk_pre['involved_teams'].astype(str)))
+#for match in matches:
+
+    matches=list(set(df_tk_pre['matchid'].astype(str)))
+
+    filtered=df_tk_pre[df_tk_pre['matchid'].astype(str)==match].reset_index(drop=True)
+    team_atrib_associations=CountMentions(filtered,pd.DataFrame(columns=top10_team_names+top10_attributes, index=top10_team_names+top10_attributes).fillna(0),columnno=5)
+    brand_attrib_combos = [ (i, j)
+        for i in top10_team_names
+        for j in top10_attributes ]
+    #print(brand_attrib_combos)
+
+    attribute_lift = pd.DataFrame(columns=top10_team_names, index=top10_attributes)
+
+    for brand in top10_team_names:
+        #print(brand)
+        for attribute in top10_attributes:
+           attribute_lift[brand][attribute] = liftcal_fromcounts(team_atrib_associations,filtered,brand, attribute)
+    return(attribute_lift)
