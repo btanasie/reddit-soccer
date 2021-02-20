@@ -1,5 +1,11 @@
 # Count values, lift, and MDS
 import pandas as pd
+import wordcloud as wc
+from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+import string
+
 def mentions(words,text):
   for word in words:
     if word not in text:
@@ -221,3 +227,18 @@ def match_lift(df_tk_pre,match,top10_team_names,top10_attributes):
         for attribute in top10_attributes:
            attribute_lift[brand][attribute] = liftcal_fromcounts(team_atrib_associations,filtered,brand, attribute)
     return(attribute_lift)
+
+
+def group_by_involved_teams(df):
+    all_words = {}
+    all_words_str = {}
+    df['involved_teams_str'] = df['involved_teams'].apply(','.join)
+    for teams, comment in df.groupby('involved_teams_str')['comment']:
+        all_words[teams] = comment
+        all_words_str[teams] = ','.join(list(map(','.join, comment)))
+    return all_words, all_words_str
+
+def get_word_cloud(value):
+    wordcloud = wc.WordCloud(background_color="white", max_words=100000, contour_width=3, contour_color='steelblue')
+    wordcloud.generate(str(value))
+    return wordcloud.to_image()

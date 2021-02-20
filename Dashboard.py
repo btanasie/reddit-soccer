@@ -20,14 +20,19 @@ else:
     admin = False
     # st.sidebar.text(admin)
 
-@st.cache(persist=True)
+@st.cache(persist=True, allow_output_mutation=True)
 def load_data(attributes=['good','bad']):
-
       return(load_lifts(attributes))
+
+
+def load_groupby(loaded_data):
+    all_words, all_words_str = group_by_involved_teams(loaded_data['data'])
+    return all_words, all_words_str
+
 import re
 
-
-input_attributes= st.text_input("Please enter attributes (ie. good,bad)")
+st.header('Data')
+input_attributes = st.text_input("Please enter attributes (ie. good,bad)")
 if(len(input_attributes)==0):
     toassess=['good','bad']
 else:
@@ -36,30 +41,32 @@ else:
     
 
 data_load_state = st.text('Loading data...')
-loaded_data= load_data(toassess)
+loaded_data = load_data(toassess)
+all_words, all_words_str = load_groupby(loaded_data)
 lift,attributes=loaded_data['team_lift'],loaded_data['attribute_lift']
 data_load_state.text("Done! (using st.cache)")
 
-st.subheader('Raw data')
-# st.write(loaded_data['data']['involved_teams'])
-st.write(lift)
-st.write(attributes)
+c1 = st.checkbox("Show/Hide Raw Data", True)
+if c1:
+    st.write(lift)
+    st.write(attributes)
 
-
-matches=list(set(loaded_data['data']['matchid'].copy().astype(str)))
+st.header('Matchup Analysis')
+matches = list(set(loaded_data['data']['matchid'].copy().astype(str)))
 option = st.selectbox(
     'Which match?',
     matches)
-print(option)
-print(type(option))
 
+match_attributes=match_lift(loaded_data['data'].copy(), option, loaded_data['top_10_team'],toassess)
+st.write(match_attributes)
+
+st.subheader('Wordcloud based on involved teams')
 teams = option.replace('[', '').replace(']', '').split(',')
 involved_teams = [teams[0], teams[1].split()[0]]
 
-match_attributes=match_lift(loaded_data['data'].copy(),option,loaded_data['top_10_team'],toassess)
-st.write(match_attributes)
+st.image(get_word_cloud(all_words_str[str(involved_teams[0] + ',' + involved_teams[1]).replace("'", "")]))
 
-
+st.header('Topic Modeling')
 option = st.selectbox('Which pre-processing?',
     ('tfidf','bag of words'))
 
