@@ -5,6 +5,10 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import string
+import gensim as gs
+import gensim.corpora as cp
+import pyLDAvis.gensim
+import pyLDAvis
 
 def mentions(words,text):
   for word in words:
@@ -242,3 +246,12 @@ def get_word_cloud(value):
     wordcloud = wc.WordCloud(background_color="white", max_words=100000, contour_width=3, contour_color='steelblue')
     wordcloud.generate(str(value))
     return wordcloud.to_image()
+
+def get_matchup_lda(value, n_topics):
+    word2num = cp.Dictionary(value)
+    texts = value
+    corpus = [word2num.doc2bow(text) for text in texts]
+    lda_model = gs.models.LdaMulticore(corpus=corpus, id2word=word2num, num_topics=n_topics)
+    doc_lda = lda_model[corpus]
+    LDAvis_prepared = pyLDAvis.gensim.prepare(lda_model, corpus, word2num)
+    return LDAvis_prepared
