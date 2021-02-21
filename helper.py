@@ -239,3 +239,28 @@ def get_word_cloud(value):
     wordcloud = wc.WordCloud(background_color="white", max_words=100000, contour_width=3, contour_color='steelblue')
     wordcloud.generate(str(value))
     return wordcloud.to_image()
+
+def mds_plot(top_brand_lifts):
+    from sklearn import manifold
+    mds = manifold.MDS(dissimilarity='euclidean', random_state=2)
+    mds_fit = mds.fit(top_brand_lifts)
+    axis = mds.fit_transform(top_brand_lifts)
+
+    #MDS Plot
+#     import matplotlib.pyplot as plt
+#     x,y = axis.T
+
+#     plt.figure(figsize=(10, 10))
+#     plt.scatter(x,y)
+
+#     for i, label in enumerate(top10_team_names):
+#        plt.annotate(label, (x[i], y[i]), xycoords='data',
+#                  xytext=(20, -20),textcoords='offset points',color='black',
+#                  bbox=dict(boxstyle="round", fc="none", ec="black"),
+#                  size=13,  ha='right', va="center")
+    
+    
+    return(mds,mds_fit,axis)
+#     plt.yticks([])
+#     plt.xticks([])
+#     plt.title('Multidimensional Scaling: Top 10 Brands')
