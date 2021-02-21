@@ -67,7 +67,8 @@ match_attributes = match_lift(loaded_data['data'].copy(), option, loaded_data['t
 st.write(match_attributes)
          
 st.text('Matchup Sentiment')
-st.text('INSERT HERE')
+sentiment=predictions[predictions['matchid']==option]['sentiment'].reset_index(drop=True)
+st.write(sentiment)
 
 prediction=predictions[predictions['matchid']==option]['winner_predict'].reset_index(drop=True)[0]
 st.text('Our winner prediction: {}'.format(prediction))
