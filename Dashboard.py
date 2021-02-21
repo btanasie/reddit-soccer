@@ -58,9 +58,12 @@ if c1:
     st.write(lift)
     st.write(attributes)
 
-#no_teams = st.slider('Select number of teams', 5, 20)
-st.subheader('Multidimensional Scaling Top {} teams'.format(10))
-mds_plot = mds_plot(top_brand_lifts=lift, no_teams=10)
+
+
+st.subheader('Multidimensional Scaling')
+no_teams = st.slider('Select number of teams', 5, 20)
+top_brands_mds = load_lifts(no_teams=no_teams)
+mds_plot = mds_plot(top_brand_lifts=top_brands_mds['team_lift'], no_teams=no_teams)
 st.pyplot(mds_plot)
 
 st.header('Matchup Analysis')
@@ -77,8 +80,12 @@ st.text('Matchup Sentiment')
 sentiment = predictions[predictions['matchid']==option]['sentiment'].reset_index(drop=True)
 st.write(sentiment)
 
-prediction = predictions[predictions['matchid']==option]['winner_predict'].reset_index(drop=True)[0]
-st.text('Our winner prediction: {}'.format(prediction))
+if not predictions[predictions['matchid']==option]['winner_predict'].reset_index(drop=True).empty:
+    prediction = predictions[predictions['matchid']==option]['winner_predict'].reset_index(drop=True)[0]
+    st.text('Our winner prediction: {}'.format(prediction))
+else:
+    st.text('No prediction for this matchup')
+
 
 
 st.subheader('Wordcloud based on involved teams')

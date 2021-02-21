@@ -241,7 +241,7 @@ def group_by_involved_teams(df):
     return all_words, all_words_str
 
 def get_word_cloud(value):
-    wordcloud = wc.WordCloud(background_color="white", max_words=100000, contour_width=3, contour_color='steelblue')
+    wordcloud = wc.WordCloud(background_color="white", max_words=100000, contour_width=3, contour_color='steelblue', width=1200, height=800)
     wordcloud.generate(str(value))
     return wordcloud.to_image()
 
