@@ -2,6 +2,11 @@
 import pandas as pd
 import wordcloud as wc
 from nltk.corpus import stopwords
+import nltk
+import pickle
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
 
 def mentions(words,text):
   for word in words:
@@ -240,27 +245,34 @@ def get_word_cloud(value):
     wordcloud.generate(str(value))
     return wordcloud.to_image()
 
-def mds_plot(top_brand_lifts):
+
+def mds_plot(top_brand_lifts, no_teams):
     from sklearn import manifold
     mds = manifold.MDS(dissimilarity='euclidean', random_state=2)
     mds_fit = mds.fit(top_brand_lifts)
     axis = mds.fit_transform(top_brand_lifts)
 
+    df_tk_pre = pickle.load(open("./data/pre_df_tk.p", "rb"))
+    df_tk_pre['ptitle'] = [text.lower() for text in df_tk_pre['ptitle']]
+    df_tk_pre['involved_teams'] = [x.split(" vs ") for x in df_tk_pre['involved_teams']]
+    match_plus_dates = df_tk_pre['involved_teams'].astype(str) + " " + df_tk_pre['pcreated_date'].astype(str)
+    df_tk_pre['matchid'] = match_plus_dates
+
+    keywords = pd.read_csv('./data/teams.csv')
+    teams = list(map(str.lower, list(set(keywords.iloc[:, 0]))))
+
+    top10_team_names = GetTopN(df_tk_pre, teams, no_teams, 'brands', [5, len(df_tk_pre.columns) - 1], tokenize=False)
+
     #MDS Plot
-#     import matplotlib.pyplot as plt
-#     x,y = axis.T
+    import matplotlib.pyplot as plt
+    x,y = axis.T
 
-#     plt.figure(figsize=(10, 10))
-#     plt.scatter(x,y)
+    fig, ax = plt.subplots(figsize=(10, 10))
+    ax.scatter(x,y)
 
-#     for i, label in enumerate(top10_team_names):
-#        plt.annotate(label, (x[i], y[i]), xycoords='data',
-#                  xytext=(20, -20),textcoords='offset points',color='black',
-#                  bbox=dict(boxstyle="round", fc="none", ec="black"),
-#                  size=13,  ha='right', va="center")
-    
-    
-    return(mds,mds_fit,axis)
-#     plt.yticks([])
-#     plt.xticks([])
-#     plt.title('Multidimensional Scaling: Top 10 Brands')
+    for i, label in enumerate(top10_team_names):
+        ax.annotate(label, (x[i], y[i]), xycoords='data',
+                  xytext=(20, -20),textcoords='offset points',color='black',
+                  bbox=dict(boxstyle="round", fc="none", ec="black"),
+                  size=13,  ha='right', va="center")
+    return fig

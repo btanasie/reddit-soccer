@@ -4,6 +4,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 import matplotlib.pyplot as plt
 from helper import *
+import pickle
 admin = False
 c1 = st.sidebar.checkbox('Admin Mode', False)
 st.sidebar.image('./images/mcgill_logo.png')
@@ -23,8 +24,9 @@ else:
 @st.cache(persist=True, allow_output_mutation=True)
 def load_data(attributes=['good','bad']):
     #predictions = pd.read_csv('./data/garbage_predictions.csv')
-    import pickle
-    predictions = pickle.load( open( "./data/predicted.p", "rb" ) )
+    # predictions = pd.read_csv('./data/garbage_predictions.csv')
+    predictions = pickle.load( open( "./data/predicted.p", "rb" ))
+    print(predictions)
     # predictions['involved_teams_str'] = predictions['involved_teams'].apply('_'.join)
     #predictions['matchid'] = predictions['involved_teams'].astype(str)+" "+predictions['pcreated_date'].astype(str)
     return (load_lifts(attributes), predictions)
@@ -56,6 +58,11 @@ if c1:
     st.write(lift)
     st.write(attributes)
 
+#no_teams = st.slider('Select number of teams', 5, 20)
+st.subheader('Multidimensional Scaling Top {} teams'.format(10))
+mds_plot = mds_plot(top_brand_lifts=lift, no_teams=10)
+st.pyplot(mds_plot)
+
 st.header('Matchup Analysis')
 matches = list(set(loaded_data['data']['matchid'].copy().astype(str)))
 option = st.selectbox(
@@ -67,10 +74,10 @@ match_attributes = match_lift(loaded_data['data'].copy(), option, loaded_data['t
 st.write(match_attributes)
          
 st.text('Matchup Sentiment')
-sentiment=predictions[predictions['matchid']==option]['sentiment'].reset_index(drop=True)
+sentiment = predictions[predictions['matchid']==option]['sentiment'].reset_index(drop=True)
 st.write(sentiment)
 
-prediction=predictions[predictions['matchid']==option]['winner_predict'].reset_index(drop=True)[0]
+prediction = predictions[predictions['matchid']==option]['winner_predict'].reset_index(drop=True)[0]
 st.text('Our winner prediction: {}'.format(prediction))
 
 
