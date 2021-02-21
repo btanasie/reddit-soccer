@@ -75,9 +75,13 @@ option = st.selectbox(
 st.text('Matchup Lift')
 match_attributes = match_lift(loaded_data['data'].copy(), option, loaded_data['top_10_team'],toassess)
 st.write(match_attributes)
-         
+
+teams = option.replace('[', '').replace(']', '').split(',')
+involved_teams = [teams[0], teams[1].split()[0]]
+
 st.text('Matchup Sentiment')
-sentiment = predictions[predictions['matchid']==option]['sentiment'].reset_index(drop=True)
+sentiment = pd.DataFrame(data=predictions[predictions['matchid']==option]['sentiment'].reset_index(drop=True))
+sentiment.columns = [str(involved_teams[0]).replace("'", "") + ' vs ' + str(involved_teams[1]).replace("'", "") + ' Sentiment']
 st.write(sentiment)
 
 if not predictions[predictions['matchid']==option]['winner_predict'].reset_index(drop=True).empty:
@@ -89,11 +93,8 @@ else:
 
 
 st.subheader('Wordcloud based on involved teams')
-teams = option.replace('[', '').replace(']', '').split(',')
-involved_teams = [teams[0], teams[1].split()[0]]
 team_value_str = all_words_str[str(involved_teams[0] + '_' + involved_teams[1]).replace("'", "")]
 st.image(get_word_cloud(team_value_str))
-
 st.header('Topic Modeling Per Matchup')
 HtmlFile = open("./html/lda_n5" + str(involved_teams[0] + '_' + involved_teams[1]).replace("'", "") + ".html", 'r', encoding='utf-8')
 source_code = HtmlFile.read()
