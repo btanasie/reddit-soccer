@@ -7,4 +7,5 @@ We used: Topic Modelling, Lift Calculation Scores, Sentiment Analysis.
 <img src="demo.gif">
 </p>
 ## McGill University
+
 ## By Anukriti, Siddharth, Richard, Bogdan
