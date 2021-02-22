@@ -22,14 +22,14 @@ else:
     # st.sidebar.text(admin)
 
 @st.cache(persist=True, allow_output_mutation=True)
-def load_data(attributes=['good','bad']):
+def load_data(attributes=['good','bad'],no_teams=10,league="Any"):
     #predictions = pd.read_csv('./data/garbage_predictions.csv')
     # predictions = pd.read_csv('./data/garbage_predictions.csv')
     predictions = pickle.load( open( "./data/predicted.p", "rb" ))
     print(predictions)
     # predictions['involved_teams_str'] = predictions['involved_teams'].apply('_'.join)
     #predictions['matchid'] = predictions['involved_teams'].astype(str)+" "+predictions['pcreated_date'].astype(str)
-    return (load_lifts(attributes), predictions)
+    return (load_lifts(attributes,no_teams=no_teams,league=league), predictions)
 
 
 def load_groupby(loaded_data):
@@ -45,26 +45,32 @@ if(len(input_attributes)==0):
 else:
     toassess=input_attributes.split(",")
 
-    
+user_input = st.text_input("Enter the League", "Any")
+no_teams = st.slider('Select number of teams', 5, 20)
 
 data_load_state = st.text('Loading data...')
-loaded_data, predictions = load_data(toassess)
+loaded_data, predictions = load_data(toassess,no_teams,user_input)
 all_words, all_words_str = load_groupby(loaded_data)
-lift,attributes=loaded_data['team_lift'],loaded_data['attribute_lift']
+lift,attributes,atrib_counts=loaded_data['team_lift'],loaded_data['attribute_lift'],loaded_data['team_atrib_counts']
 data_load_state.text("Done! (using st.cache)")
+
+
 
 c1 = st.checkbox("Show/Hide Raw Data", True)
 if c1:
     st.write(lift)
     st.write(attributes)
+    st.write(atrib_counts)
 
 
 
 st.subheader('Multidimensional Scaling')
-no_teams = st.slider('Select number of teams', 5, 20)
+#no_teams = st.slider('Select number of teams', 5, 20)
 top_brands_mds = load_lifts(no_teams=no_teams)
 mds_plot = mds_plot(top_brand_lifts=top_brands_mds['team_lift'], no_teams=no_teams)
 st.pyplot(mds_plot)
+
+
 
 st.header('Matchup Analysis')
 matches = list(set(loaded_data['data']['matchid'].copy().astype(str)))
@@ -83,7 +89,8 @@ st.text('Matchup Sentiment')
 sentiment = pd.DataFrame(data=predictions[predictions['matchid']==option]['sentiment'].reset_index(drop=True))
 sentiment.columns = [str(involved_teams[0]).replace("'", "") + ' vs ' + str(involved_teams[1]).replace("'", "") + ' Sentiment']
 st.write(sentiment)
-
+#st.write(predictions[predictions['matchid']==option]['ptitle'].reset_index(drop=True)[0])
+print(predictions)
 if not predictions[predictions['matchid']==option]['winner_predict'].reset_index(drop=True).empty:
     prediction = predictions[predictions['matchid']==option]['winner_predict'].reset_index(drop=True)[0]
     st.text('Our winner prediction: {}'.format(prediction))

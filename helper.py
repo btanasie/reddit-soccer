@@ -130,7 +130,7 @@ def CountMentions(df_tokenized, association_matrix,columnno):
           association_matrix[brand_col][brand_row] += 1
   return association_matrix
 
-def load_lifts(attributes=['good','bad'],no_teams=10):
+def load_lifts(attributes=['good','bad'],no_teams=10,league="Any"):
     from datetime import datetime
     #pre_df = pd.read_csv('./data/pre_soccer_replaced.csv')
     #post_df = pd.read_csv('./data/post_soccer_replaced.csv')
@@ -145,7 +145,8 @@ def load_lifts(attributes=['good','bad'],no_teams=10):
     df_tk_pre['involved_teams'] = [x.split(" vs ") for x in df_tk_pre['involved_teams']]
     match_plus_dates=df_tk_pre['involved_teams'].astype(str)+" "+df_tk_pre['pcreated_date'].astype(str)
     df_tk_pre['matchid'] = match_plus_dates
-    
+    if(league!="Any"):
+        df_tk_pre=df_tk_pre[df_tk_pre['ptitle'].str.contains(league)].reset_index(drop=True)
     
     keywords = pd.read_csv('./data/teams.csv')
     teams = list(map(str.lower, list(set(keywords.iloc[:, 0]))))
